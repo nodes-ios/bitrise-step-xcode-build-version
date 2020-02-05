@@ -66,7 +66,7 @@ inputs:
   - bitrise_tag_xcodeproj_path: ""
     opts:
       title: "Path to the 'xcodeproj'"
-      summary: Path to the 'xcodeproj'
+      summary: Path to the 'xcodeproj'.
       description: |
         Use it with Xcode 11 and higher.
 
@@ -75,12 +75,12 @@ inputs:
   - bitrise_tag_info_plist_path: ""
     opts:
       title: "Path to the 'Info.plist'"
-      summary: Path to the 'Info.plist' file
+      summary: Path to the 'Info.plist' file.
       description: |
         File of your release 'Info.plist' file.
 
         If not set it tries to find it.
-      is_required: true
+      is_required: false
 
 outputs:
   - XBV_PROJECT_VERSION:
