@@ -27,7 +27,7 @@ find_info_plist() {
 }
 
 find_xcodeproj() {
-  local result=$(find . -name '*.xcodeproj' -not -path "./Carthage/*" -not -path "./Pods/*" | \
+  local result=$(find . -name '*.xcodeproj' -maxdepth 1 -not -path "./.*" -not -path "./Carthage/*" -not -path "./Pods/*" | \
     sed -e "s/^.\///" -e "s/^\///" | \
     head -n 1)
 
@@ -42,14 +42,14 @@ CFBundleShortVersionStringKey=false
 
 if [ -z "$bitrise_tag_info_plist_path" ]; then
   # If plist_path is not defined, it tries to find it before aborting
-  echo "Searching for Info.plist ..."
-
   bitrise_tag_info_plist_path=$(find_info_plist)
 
   if [ -z "$bitrise_tag_info_plist_path" ]; then
     echo "bitrise_tag_info_plist_path is empty"
     exit 1
   fi 
+
+  echo "Info.plist: $bitrise_tag_info_plist_path"
 fi
 
 while read_dom; do
@@ -87,18 +87,16 @@ if [ -z "$CFBundleVersion" ]; then
 fi
 
 if [[ $CFBundleVersion == *CURRENT_PROJECT_VERSION* ]]; then
-  echo "Exctract build number from xcodeproj"
-
   if [ -z "$bitrise_tag_xcodeproj_path" ]; then
     # If xcodeproj_path is not defined, it tries to find it before aborting
-    echo "Searching for *.xcodeproj ..."
-
     bitrise_tag_xcodeproj_path=$(find_xcodeproj)
 
     if [ -z "$bitrise_tag_xcodeproj_path" ]; then
       echo "bitrise_tag_xcodeproj_path is empty"
       exit 1
     fi
+
+    echo "XCODEPROJ: $bitrise_tag_xcodeproj_path/project.pbxproj"
   fi
 
   CURRENT_PROJECT_VERSION=""
@@ -118,8 +116,6 @@ if [[ $CFBundleVersion == *CURRENT_PROJECT_VERSION* ]]; then
 fi
 
 if [[ $CFBundleShortVersionString == *MARKETING_VERSION* ]]; then
-  echo "Exctract version number from xcodeproj"
-
   if [ -z "$bitrise_tag_xcodeproj_path" ]; then
     echo "bitrise_tag_xcodeproj_path is empty"
     exit 1
