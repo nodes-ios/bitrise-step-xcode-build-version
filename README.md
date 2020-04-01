@@ -1,3 +1,3 @@
 # Xcode Build Version
 
-Gets project's version and build number
+Gets version and build number of project
