@@ -8,9 +8,9 @@
 # - Bitrise CLI guides: http://devcenter.bitrise.io/bitrise-cli/
 
 title: |-
-  Xcode Build Version
+  Get Xcode project version
 summary: |
-  Gets the project's version and build number
+  Gets version and build number of the project
 description: |
   Gets project's version and build number
 website: https://github.com/nodes-ios/bitrise-step-xcode-build-version
@@ -18,7 +18,6 @@ source_code_url: https://github.com/nodes-ios/bitrise-step-xcode-build-version
 support_url: https://github.com/nodes-ios/bitrise-step-xcode-build-version/issues
 host_os_tags:
   - osx-10.10
-  - ubuntu-16.04
 
 # If this step should be available only for certain project types
 # just uncomment this `project_type_tags` section and include all the
@@ -48,15 +47,6 @@ is_requires_admin_user: true
 is_always_run: false
 is_skippable: false
 run_if: ""
-
-deps:
-  brew:
-  - name: git
-  - name: wget
-  apt_get:
-  - name: git
-  - name: wget
-
 
 toolkit:
   bash:
@@ -94,4 +84,4 @@ outputs:
       title: "CFBundleVersion"
       summary: Project build number.
       description: |
-        Project vuild number, eg, 85
+        Project build number, e.g., 85
