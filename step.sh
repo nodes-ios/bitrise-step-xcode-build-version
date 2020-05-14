@@ -40,16 +40,16 @@ CFBundleVersionKey=false
 CFBundleShortVersionString=""
 CFBundleShortVersionStringKey=false
 
-if [ -z "$bitrise_tag_info_plist_path" ]; then
+if [ -z "$info_plist_path" ]; then
   # If plist_path is not defined, it tries to find it before aborting
-  bitrise_tag_info_plist_path=$(find_info_plist)
+  info_plist_path=$(find_info_plist)
 
-  if [ -z "$bitrise_tag_info_plist_path" ]; then
-    echo "bitrise_tag_info_plist_path is empty"
+  if [ -z "$info_plist_path" ]; then
+    echo "info_plist_path is empty"
     exit 1
   fi 
 
-  echo "Info.plist: $bitrise_tag_info_plist_path"
+  echo "Info.plist: $info_plist_path"
 fi
 
 while read_dom; do
@@ -74,7 +74,7 @@ while read_dom; do
   if [[ $CONTENT == "CFBundleVersion" ]]; then
     CFBundleVersionKey=true
   fi
-done <"$bitrise_tag_info_plist_path"
+done <"$info_plist_path"
 
 if [ -z "$CFBundleShortVersionString" ]; then
   echo "CFBundleShortVersionString is empty"
@@ -87,22 +87,22 @@ if [ -z "$CFBundleVersion" ]; then
 fi
 
 if [[ $CFBundleVersion == *CURRENT_PROJECT_VERSION* ]]; then
-  if [ -z "$bitrise_tag_xcodeproj_path" ]; then
+  if [ -z "$project_path" ]; then
     # If xcodeproj_path is not defined, it tries to find it before aborting
-    bitrise_tag_xcodeproj_path=$(find_xcodeproj)
+    project_path=$(find_xcodeproj)
 
-    if [ -z "$bitrise_tag_xcodeproj_path" ]; then
-      echo "bitrise_tag_xcodeproj_path is empty"
+    if [ -z "$project_path" ]; then
+      echo "project_path is empty"
       exit 1
     fi
 
-    echo "XCODEPROJ: $bitrise_tag_xcodeproj_path/project.pbxproj"
+    echo "XCODEPROJ: $project_path/project.pbxproj"
   fi
 
   CURRENT_PROJECT_VERSION=""
-  LINES=$(sed -n '/CURRENT_PROJECT_VERSION/=' "$bitrise_tag_xcodeproj_path/project.pbxproj")
+  LINES=$(sed -n '/CURRENT_PROJECT_VERSION/=' "$project_path/project.pbxproj")
   for LINE in $LINES; do
-    CURRENT_PROJECT_VERSION=$(sed -n "$LINE"p "$bitrise_tag_xcodeproj_path"/project.pbxproj)
+    CURRENT_PROJECT_VERSION=$(sed -n "$LINE"p "$project_path"/project.pbxproj)
     CURRENT_PROJECT_VERSION="${CURRENT_PROJECT_VERSION#*= }"
     CURRENT_PROJECT_VERSION="${CURRENT_PROJECT_VERSION%;}"
   done
@@ -116,15 +116,15 @@ if [[ $CFBundleVersion == *CURRENT_PROJECT_VERSION* ]]; then
 fi
 
 if [[ $CFBundleShortVersionString == *MARKETING_VERSION* ]]; then
-  if [ -z "$bitrise_tag_xcodeproj_path" ]; then
-    echo "bitrise_tag_xcodeproj_path is empty"
+  if [ -z "$project_path" ]; then
+    echo "project_path is empty"
     exit 1
   fi
 
   MARKETING_VERSION=""
-  LINES=$(sed -n '/MARKETING_VERSION/=' "$bitrise_tag_xcodeproj_path/project.pbxproj")
+  LINES=$(sed -n '/MARKETING_VERSION/=' "$project_path/project.pbxproj")
   for LINE in $LINES; do
-    MARKETING_VERSION=$(sed -n "$LINE"p "$bitrise_tag_xcodeproj_path"/project.pbxproj)
+    MARKETING_VERSION=$(sed -n "$LINE"p "$project_path"/project.pbxproj)
     MARKETING_VERSION="${MARKETING_VERSION#*= }"
     MARKETING_VERSION="${MARKETING_VERSION%;}"
   done
